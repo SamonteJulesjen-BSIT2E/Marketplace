@@ -10,22 +10,18 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Handle approval actions
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'], $_POST['item_id'])) {
     $itemId = (int)$_POST['item_id'];
     $action = $_POST['action'];
 
     if ($action === 'approved') {
-        $conn->query("UPDATE items SET status='approved' WHERE id=$itemId");
+        $conn->query("UPDATE items SET status='approved' WHERE item_id=$itemId");
     } elseif ($action === 'rejected') {
-        $conn->query("DELETE FROM items WHERE id=$itemId");
+        $conn->query("DELETE FROM items WHERE item_id=$itemId");
     }
 }
 
-// Fetch pending items
-$pendingItems = $conn->query("SELECT items.*, users.username FROM items JOIN users ON items.user_id = users.id WHERE items.status='pending' ORDER BY items.id DESC");
-
-// Fetch users (excluding admins)
+$pendingItems = $conn->query("SELECT items.*, users.username FROM items JOIN users ON items.user_id = users.id WHERE items.status='pending' ORDER BY items.item_id DESC");
 $users = $conn->query("SELECT * FROM users WHERE role != 'admin' ORDER BY id DESC");
 ?>
 
@@ -33,93 +29,7 @@ $users = $conn->query("SELECT * FROM users WHERE role != 'admin' ORDER BY id DES
 <html>
 <head>
     <title>Admin Dashboard</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #0f2e1e;
-            margin: 0;
-            display: flex;
-            color: #f5f5f5;
-        }
-        .sidebar {
-            width: 220px;
-            background: #14532d;
-            color: #fff;
-            padding: 20px;
-            height: 100vh;
-        }
-        .sidebar h2 {
-            font-size: 22px;
-            margin-bottom: 25px;
-            border-bottom: 1px solid #2f855a;
-            padding-bottom: 10px;
-        }
-        .sidebar a {
-            color: #f5f5f5;
-            display: block;
-            margin: 18px 0;
-            text-decoration: none;
-            font-size: 16px;
-        }
-        .sidebar a:hover {
-            text-decoration: underline;
-        }
-        .content {
-            flex: 1;
-            padding: 30px;
-            overflow-y: auto;
-        }
-        h2 {
-            color: #f5f5f5;
-            margin-bottom: 20px;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background: #1e3a2a;
-            margin-bottom: 40px;
-        }
-        th, td {
-            border: 1px solid #35654a;
-            padding: 10px;
-            text-align: left;
-            color: #e2e8f0;
-        }
-        th {
-            background: #166534;
-        }
-        img {
-            max-width: 80px;
-            height: auto;
-            border-radius: 4px;
-        }
-        button {
-            padding: 6px 12px;
-            background: #16a34a;
-            border: none;
-            color: #fff;
-            cursor: pointer;
-            border-radius: 4px;
-        }
-        button:hover {
-            background: #22c55e;
-        }
-        .danger-btn {
-            background: #dc2626;
-        }
-        .danger-btn:hover {
-            background: #f87171;
-        }
-        form {
-            display: inline;
-        }
-        .section {
-            display: none;
-        }
-        .section.active {
-            display: block;
-        }
-    </style>
+    <link rel="stylesheet" href="admindashboard.css">
 </head>
 <body>
 
@@ -163,7 +73,7 @@ $users = $conn->query("SELECT * FROM users WHERE role != 'admin' ORDER BY id DES
                             <td><?php echo htmlspecialchars($item['username']); ?></td>
                             <td>
                                 <form method="post">
-                                    <input type="hidden" name="item_id" value="<?php echo $item['id']; ?>">
+                                    <input type="hidden" name="item_id" value="<?php echo $item['item_id']; ?>">
                                     <button type="submit" name="action" value="approved">Approve</button>
                                     <button type="submit" name="action" value="rejected" class="danger-btn" onclick="return confirm('Reject this item?');">Reject</button>
                                 </form>
@@ -202,12 +112,6 @@ $users = $conn->query("SELECT * FROM users WHERE role != 'admin' ORDER BY id DES
     </div>
 </div>
 
-<script>
-    function showSection(sectionId) {
-        document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
-        document.getElementById(sectionId).classList.add('active');
-    }
-</script>
-
+<script src="admindashboard.js"></script>
 </body>
 </html>

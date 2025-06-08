@@ -1,0 +1,102 @@
+body {
+    font-family: Arial, sans-serif;
+    background: #0f2e1e;
+    margin: 0;
+    display: flex;
+    color: #f5f5f5;
+}
+
+.sidebar {
+    width: 220px;
+    background: #14532d;
+    color: #fff;
+    padding: 20px;
+    height: 100vh;
+}
+
+.sidebar h2 {
+    font-size: 22px;
+    margin-bottom: 25px;
+    border-bottom: 1px solid #2f855a;
+    padding-bottom: 10px;
+}
+
+.sidebar a {
+    color: #f5f5f5;
+    display: block;
+    margin: 18px 0;
+    text-decoration: none;
+    font-size: 16px;
+}
+
+.sidebar a:hover {
+    text-decoration: underline;
+}
+
+.content {
+    flex: 1;
+    padding: 30px;
+    overflow-y: auto;
+}
+
+h2 {
+    color: #f5f5f5;
+    margin-bottom: 20px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #1e3a2a;
+    margin-bottom: 40px;
+}
+
+th, td {
+    border: 1px solid #35654a;
+    padding: 10px;
+    text-align: left;
+    color: #e2e8f0;
+}
+
+th {
+    background: #166534;
+}
+
+img {
+    max-width: 80px;
+    height: auto;
+    border-radius: 4px;
+}
+
+button {
+    padding: 6px 12px;
+    background: #16a34a;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+button:hover {
+    background: #22c55e;
+}
+
+.danger-btn {
+    background: #dc2626;
+}
+
+.danger-btn:hover {
+    background: #f87171;
+}
+
+form {
+    display: inline;
+}
+
+.section {
+    display: none;
+}
+
+.section.active {
+    display: block;
+}
