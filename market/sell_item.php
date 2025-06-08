@@ -39,20 +39,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['sell'])) {
         $error = "No image file uploaded.";
     } elseif ($_FILES['image']['error'] !== UPLOAD_ERR_OK) {
         $uploadErrors = [
-            UPLOAD_ERR_INI_SIZE => "The uploaded file exceeds the upload_max_filesize directive in php.ini.",
-            UPLOAD_ERR_FORM_SIZE => "The uploaded file exceeds the MAX_FILE_SIZE directive specified in the HTML form.",
+            UPLOAD_ERR_INI_SIZE => "The uploaded file exceeds the upload_max_filesize directive.",
+            UPLOAD_ERR_FORM_SIZE => "The uploaded file exceeds the MAX_FILE_SIZE directive.",
             UPLOAD_ERR_PARTIAL => "The uploaded file was only partially uploaded.",
             UPLOAD_ERR_NO_FILE => "No file was uploaded.",
             UPLOAD_ERR_NO_TMP_DIR => "Missing a temporary folder.",
             UPLOAD_ERR_CANT_WRITE => "Failed to write file to disk.",
-            UPLOAD_ERR_EXTENSION => "A PHP extension stopped the file upload.",
+            UPLOAD_ERR_EXTENSION => "A PHP extension stopped the upload.",
         ];
         $error = $uploadErrors[$_FILES['image']['error']] ?? "Unknown upload error.";
     }
 
     if (!$error) {
         $image_name = basename($_FILES['image']['name']);
-        $target_dir = "uploads/";  // use a relative folder like your movie code
+        $target_dir = "uploads/";
         if (!is_dir($target_dir)) {
             mkdir($target_dir, 0755, true);
         }
@@ -65,7 +65,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['sell'])) {
                 $success = "Item listed successfully! Awaiting admin approval.";
             } else {
                 $error = "Database error: " . $stmt->error;
-                unlink($target_file);  // remove file if DB insert fails
+                unlink($target_file);
             }
             $stmt->close();
         } else {
@@ -79,41 +79,37 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['sell'])) {
 <html>
 <head>
     <title>Sell Item</title>
-    <style>
-        /* Minimal styling */
-        body { max-width: 600px; margin: 30px auto; font-family: Arial, sans-serif; }
-        label { display: block; margin-top: 10px; }
-        input[type=text], input[type=number], textarea, input[type=file] { width: 100%; padding: 8px; margin-top: 5px; box-sizing: border-box; }
-        input[type=submit] { margin-top: 15px; padding: 10px 20px; cursor: pointer; }
-        .error { color: red; }
-        .success { color: green; }
-    </style>
+    <link rel="stylesheet" href="sellitem.css">
 </head>
 <body>
 
-<h2>List an Item for Sale</h2>
+<div class="container">
+    <h2>List an Item for Sale</h2>
 
-<?php if ($error): ?>
-    <p class="error"><?= htmlspecialchars($error) ?></p>
-<?php elseif ($success): ?>
-    <p class="success"><?= htmlspecialchars($success) ?></p>
-<?php endif; ?>
+    <?php if ($error): ?>
+        <p class="error"><?= htmlspecialchars($error) ?></p>
+    <?php elseif ($success): ?>
+        <p class="success"><?= htmlspecialchars($success) ?></p>
+    <?php endif; ?>
 
-<form method="post" enctype="multipart/form-data">
-    <label for="itemname">Item Name *</label>
-    <input type="text" id="itemname" name="itemname" required>
+    <form method="post" enctype="multipart/form-data">
+        <label for="itemname">Item Name *</label>
+        <input type="text" id="itemname" name="itemname" required>
 
-    <label for="description">Description</label>
-    <textarea id="description" name="description" rows="4"></textarea>
+        <label for="description">Description</label>
+        <textarea id="description" name="description" rows="4"></textarea>
 
-    <label for="price">Price (USD) *</label>
-    <input type="number" id="price" name="price" min="0" step="0.01" required>
+        <label for="price">Price (USD) *</label>
+        <input type="number" id="price" name="price" min="0" step="0.01" required>
 
-    <label for="image">Item Image *</label>
-    <input type="file" id="image" name="image" accept="image/*" required>
+        <label for="image">Item Image *</label>
+        <input type="file" id="image" name="image" accept="image/*" required>
 
-    <input type="submit" name="sell" value="List Item">
-</form>
+        <input type="submit" name="sell" value="List Item">
+    </form>
+
+    <a href="userdashboard.php" class="back-btn">← Back to Dashboard</a>
+</div>
 
 </body>
 </html>
