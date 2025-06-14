@@ -1,12 +1,7 @@
 <?php
 session_start();
 
-$host = "localhost";
-$dbUsername = "root";
-$dbPassword = "";
-$dbName = "system";
-
-$conn = new mysqli($host, $dbUsername, $dbPassword, $dbName);
+$conn = new mysqli("localhost", "root", "", "market", 3306,"/data/data/com.termux/files/usr/var/run/mysqld.sock");
 
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
@@ -16,28 +11,30 @@ $error = "";
 $success = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $username = trim($_POST['username']);
-    $password = $_POST['password'];  // Plain password, no hashing
-    $confirm_password = $_POST['confirm_password'];
+    $email = trim($_POST['email']);
+    $firstname = trim($_POST['firstname']);
+    $lastname = trim($_POST['lastname']);
+    $phone = trim($_POST['phone']);
+    $role = 'user';
 
-    if (empty($username) || empty($password) || empty($confirm_password)) {
+    if (empty($email) || empty($firstname) || empty($lastname) || empty($phone)) {
         $error = "All fields are required.";
-    } elseif ($password !== $confirm_password) {
-        $error = "Passwords do not match.";
     } else {
-        $stmt = $conn->prepare("SELECT id FROM users WHERE username = ?");
-        $stmt->bind_param("s", $username);
+        // Check if email already exists
+        $stmt = $conn->prepare("SELECT * FROM users WHERE Email = ?");
+        $stmt->bind_param("s", $email);
         $stmt->execute();
         $stmt->store_result();
 
         if ($stmt->num_rows > 0) {
-            $error = "Username already taken.";
+            $error = "Email is already registered.";
+            $stmt->close();
         } else {
             $stmt->close();
 
-            // Insert without hashing password
-            $insert = $conn->prepare("INSERT INTO users (username, password) VALUES (?, ?)");
-            $insert->bind_param("ssis", $username, $password);
+            // Insert new user
+            $insert = $conn->prepare("INSERT INTO users (Email, Firstname, Lastname, phone, role) VALUES (?, ?, ?, ?, ?)");
+            $insert->bind_param("sssss", $email, $firstname, $lastname, $phone, $role);
 
             if ($insert->execute()) {
                 $success = "Registration successful!";
@@ -55,37 +52,51 @@ $conn->close();
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="UTF-8">
     <title>SIGN-UP</title>
-    <link rel="stylesheet" href="register.css" />
-    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="register.css">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
 </head>
 <body>
     <div class="wrapper">
         <form action="" method="POST">
             <h1>SIGN-UP</h1>
 
-            <?php if ($error): ?>
+            <?php if (!empty($error)) : ?>
                 <p style="color: red;"><?php echo htmlspecialchars($error); ?></p>
             <?php endif; ?>
 
-            <?php if ($success): ?>
-                <p style="color: green;"><?php echo $success; ?></p>
+            <?php if (!empty($success)) : ?>
+                <p style="color: green;"><?php echo htmlspecialchars($success); ?></p>
             <?php endif; ?>
 
             <div class="input-box">
-                <input type="text" name="username" placeholder="Username" required />
+                <input type="email" name="email" placeholder="Email" required>
+                <i class="bx bxs-envelope"></i>
+            </div>
+
+            <div class="input-box">
+                <input type="text" name="firstname" placeholder="Firstname" required>
                 <i class="bx bxs-user"></i>
             </div>
 
             <div class="input-box">
-                <input type="password" name="password" placeholder="Password" required />
+                <input type="text" name="lastname" placeholder="Lastname" required>
+                <i class="bx bxs-user"></i>
+            </div>
+
+            <div class="input-box">
+                <input type="text" name="phone" placeholder="Phone Number" required>
+                <i class="bx bxs-phone"></i>
+            </div>
+
+            <div class="input-box">
+                <input type="password" name="password" placeholder="Password" required>
                 <i class="bx bxs-lock-alt"></i>
             </div>
 
             <div class="input-box">
-                <input type="password" name="confirm_password" placeholder="Confirm Password" required />
+                <input type="password" name="confirm_password" placeholder="Confirm Password" required>
                 <i class="bx bxs-lock-alt"></i>
             </div>
 
@@ -97,8 +108,7 @@ $conn->close();
         </form>
     </div>
     <div class="footer">
-  <p>&copy; 2025 KUPAL. All Rights Reserve</p>
-  </div>
-</div>
+        <p>&copy; 2025 KUPAL. All Rights Reserved.</p>
+    </div>
 </body>
 </html>

@@ -1,51 +1,52 @@
 <?php
-session_start(); // Start the session
+session_start();
 
-$conn = new mysqli("localhost", "root", "", "system");
+$conn = new mysqli("localhost", "root", "", "market", 3306,"/data/data/com.termux/files/usr/var/run/mysqld.sock");
 
-// Check connection
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-$error = ""; // Initialize error message
+$error = "";
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    if (isset($_POST['username']) && isset($_POST['password'])) {
-        $username = $_POST['username'];
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    if (isset($_POST['email']) && isset($_POST['password'])) {
+        $email = trim($_POST['email']);
         $password = $_POST['password'];
 
-        // Query the database for the user
-        $sql = "SELECT * FROM users WHERE username='$username' AND password='$password'";
-        $result = $conn->query($sql);
+        $stmt = $conn->prepare("SELECT * FROM users WHERE Email = ? AND phone = ?");
+        $stmt->bind_param("ss", $email, $password);
+        $stmt->execute();
+        $result = $stmt->get_result();
 
         if ($result->num_rows > 0) {
             $row = $result->fetch_assoc();
 
-            // Set session variables
-            $_SESSION["username"] = $row['username'];
+            $_SESSION["email"] = $row['Email'];
             $_SESSION["role"] = $row['role'];
 
-            // Redirect based on role
-            if ($row['role'] == 'admin') {
+            if ($row['role'] === 'admin') {
                 header("Location: dashboard1.php");
-                exit();
             } else {
                 header("Location: admindash.php");
-                exit();
             }
+            exit();
         } else {
-            $error = "Invalid username or password!";
+            $error = "Invalid email or password!";
         }
+
+        $stmt->close();
     }
 }
+
+$conn->close();
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Login Form</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="login.css">
   <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 </head>
@@ -66,8 +67,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <?php if (!empty($error)) { echo "<p style='color:red;'>$error</p>"; } ?>
 
     <div class="input-box">
-      <input type="text" name="username" placeholder="Username" required>
-      <i class='bx bxs-user'></i>
+      <input type="email" name="email" placeholder="Email" required>
+      <i class='bx bxs-envelope'></i>
     </div>
 
     <div class="input-box">
@@ -89,8 +90,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </div>
 
 <div class="footer">
-  <p>&copy; 2025 Fashions. All Rights Reserve</p>
-  </div>
+  <p>&copy; 2025 Fashions. All Rights Reserved.</p>
 </div>
 
 </body>
