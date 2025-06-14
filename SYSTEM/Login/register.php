@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-$conn = new mysqli("localhost", "root", "", "market", 3306,"/data/data/com.termux/files/usr/var/run/mysqld.sock");
+$conn = new mysqli("localhost", "root", "", "jj");
 
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
@@ -54,7 +54,7 @@ $conn->close();
 <head>
     <meta charset="UTF-8">
     <title>SIGN-UP</title>
-    <link rel="stylesheet" href="register.css">
+    <link rel="stylesheet" href="../Styles/register.css">
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
 </head>
 <body>

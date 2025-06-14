@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-$conn = new mysqli("localhost", "root", "", "market", 3306,"/data/data/com.termux/files/usr/var/run/mysqld.sock");
+$conn = new mysqli("localhost", "root", "", "jj");
 
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
@@ -47,7 +47,7 @@ $conn->close();
   <meta charset="UTF-8">
   <title>Login Form</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="login.css">
+  <link rel="stylesheet" href="../Styles/login.css">
   <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 </head>
 <body>
