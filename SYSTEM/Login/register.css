@@ -1,7 +1,10 @@
 *{
 
     margin: 0;
+<<<<<<< HEAD
   
+=======
+>>>>>>> f95abfc7841e005d9be42cf147606f7a01871a6b
     padding: 0;
     box-sizing: border-box;
     font-family: "Poppins", sans-serif;
@@ -20,7 +23,11 @@
     background: transparent;
     border: 2px solid rgba(255, 255, 255, .2);
     backdrop-filter: blur(9px);
+<<<<<<< HEAD
     color: #fff;
+=======
+    color: #d8cece;
+>>>>>>> f95abfc7841e005d9be42cf147606f7a01871a6b
     border-radius: 12px;
     padding: 30px 40px;
   }
