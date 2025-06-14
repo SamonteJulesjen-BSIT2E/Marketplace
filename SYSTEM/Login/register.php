@@ -54,7 +54,7 @@ $conn->close();
 <head>
     <meta charset="UTF-8">
     <title>SIGN-UP</title>
-    <link rel="stylesheet" href="../Styles/register.css">
+    <link rel="stylesheet" href="register.css">
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
 </head>
 <body>

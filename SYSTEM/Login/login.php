@@ -28,7 +28,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             if ($row['role'] === 'admin') {
                 header("Location: dashboard1.php");
             } else {
-                header("Location: admindash.php");
+                header("Location: admin_dashboard.php");
             }
             exit();
         } else {
@@ -47,7 +47,7 @@ $conn->close();
   <meta charset="UTF-8">
   <title>Login Form</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="../Styles/login.css">
+  <link rel="stylesheet" href="register.css">
   <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 </head>
 <body>
@@ -60,6 +60,7 @@ $conn->close();
   </ul>
 </nav>
 
+<div class="main-content">
 <div class="wrapper">
   <form action="login.php" method="POST">
     <h1>SIGN-IN</h1>
@@ -88,9 +89,9 @@ $conn->close();
     </div>
   </form>
 </div>
-
+</div>
 <div class="footer">
-  <p>&copy; 2025 Fashions. All Rights Reserved.</p>
+  <p>&copy; 2025 Hello. All Rights Reserved.</p>
 </div>
 
 </body>
