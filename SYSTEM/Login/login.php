@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-$conn = new mysqli("localhost", "root", "", "jj");
+$conn = new mysqli("localhost", "root", "", "market");
 
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
@@ -14,7 +14,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $email = trim($_POST['email']);
         $password = $_POST['password'];
 
-        $stmt = $conn->prepare("SELECT * FROM users WHERE Email = ? AND phone = ?");
+        $stmt = $conn->prepare("SELECT * FROM users WHERE Email = ? AND password = ?");
         $stmt->bind_param("ss", $email, $password);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -28,7 +28,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             if ($row['role'] === 'admin') {
                 header("Location: dashboard1.php");
             } else {
-                header("Location: admin_dashboard.php");
+                header("Location: admindash.php");
             }
             exit();
         } else {
@@ -47,7 +47,7 @@ $conn->close();
   <meta charset="UTF-8">
   <title>Login Form</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="register.css">
+  <link rel="stylesheet" href="login.css">
   <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 </head>
 <body>
@@ -60,7 +60,6 @@ $conn->close();
   </ul>
 </nav>
 
-<div class="main-content">
 <div class="wrapper">
   <form action="login.php" method="POST">
     <h1>SIGN-IN</h1>
@@ -89,9 +88,9 @@ $conn->close();
     </div>
   </form>
 </div>
-</div>
+
 <div class="footer">
-  <p>&copy; 2025 Hello. All Rights Reserved.</p>
+  <p>&copy; 2025 Fashions. All Rights Reserved.</p>
 </div>
 
 </body>
