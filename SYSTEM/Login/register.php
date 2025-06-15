@@ -12,15 +12,16 @@ $success = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = trim($_POST['email']);
+    $password = trim($_POST['password']);
     $firstname = trim($_POST['firstname']);
     $lastname = trim($_POST['lastname']);
     $phone = trim($_POST['phone']);
     $role = 'user';
 
-    if (empty($email) || empty($firstname) || empty($lastname) || empty($phone)) {
+    if (empty($email) || empty($password) || empty($firstname) || empty($lastname) || empty($phone)) {
         $error = "All fields are required.";
     } else {
-        // Check if email already exists
+        
         $stmt = $conn->prepare("SELECT * FROM users WHERE Email = ?");
         $stmt->bind_param("s", $email);
         $stmt->execute();
@@ -32,9 +33,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         } else {
             $stmt->close();
 
-            // Insert new user
-            $insert = $conn->prepare("INSERT INTO users (Email, Firstname, Lastname, phone, role) VALUES (?, ?, ?, ?, ?)");
-            $insert->bind_param("sssss", $email, $firstname, $lastname, $phone, $role);
+            
+            $insert = $conn->prepare("INSERT INTO users (Email, password, Firstname, Lastname, phone, role) VALUES (?, ?, ?, ?, ?, ?)");
+            $insert->bind_param("ssssss", $email, $password, $firstname, $lastname, $phone, $role);
 
             if ($insert->execute()) {
                 $success = "Registration successful!";
