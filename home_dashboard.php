@@ -5,14 +5,7 @@ if ($conn->connect_error) {
 }
 
 session_start();
-if (!isset($_SESSION['user_id'])) {
-    header("Location: login.php");
-    exit();
-}
 
-if (!isset($_SESSION['cart'])) {
-    $_SESSION['cart'] = [];
-}
 
 $view = isset($_GET['view']) ? $_GET['view'] : 'marketplace';
 
@@ -27,28 +20,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!empty($_POST['name']) && !empty($_POST['price']) && !empty($_POST['description'])) {
         $name = $conn->real_escape_string($_POST["name"]);
         $price = (float)$_POST["price"];
-        $description = $conn->real_escape_string($_POST["description"]);
-        $userId = (int)$_SESSION['user_id'];
+        $description = $conn->real_escape_string($_POST['description']);
+        $userId = (int)$_SESSION["user_id"];
 
         if (isset($_FILES['image']) && $_FILES['image']['error'] === 0) {
-            $imageName = uniqid() . "_" . basename($_FILES['image']['name']);
-            $targetDir = "uploads/";
-            $targetFile = $targetDir . $imageName;
+    $imageName = uniqid() . "_" . basename($_FILES['image']['name']);
+    $targetDir = "uploads/";
+    $targetFile = $targetDir . $imageName;
 
-            if (move_uploaded_file($_FILES['image']['tmp_name'], $targetFile)) {
-                $stmt = $conn->prepare("INSERT INTO products (product_name, user_id, price, Description, Image) VALUES (?, ?, ?, ?, ?)");
-                $stmt->bind_param("sids", $name, $userId, $price, $description, $imageName);
-                if ($stmt->execute()) {
-                    header("Location: " . $_SERVER['PHP_SELF'] . "?view=marketplace");
-                    exit();
-                }
-                $stmt->close();
-            } else {
-                echo "<script>alert('Failed to upload image.');</script>";
-            }
+    if (move_uploaded_file($_FILES['image']['tmp_name'], $targetFile)) {
+        $stmt = $conn->prepare("INSERT INTO products (product_name, user_id, price, Description, Image) VALUES (?, ?, ?, ?, ?)");
+        $stmt->bind_param("sidss", $name, $userId, $price, $description, $imageName);
+
+        if ($stmt->execute()) {
+            header("Location: " . $_SERVER['PHP_SELF'] . "?view=marketplace");
+            exit();
         } else {
-            echo "<script>alert('Please upload an image.');</script>";
+            echo "<script>alert('Database Insert Failed: " . $stmt->error . "');</script>";
         }
+        $stmt->close();
+    } else {
+        echo "<script>alert('Failed to upload image.');</script>";
+    }
+} else {
+    echo "<script>alert('Please upload an image.');</script>";
+}
     }
 }
 ?>
