@@ -1,5 +1,5 @@
 <?php
-$conn = new mysqli("localhost", "root", "", "market", 3306, "/data/data/com.termux/files/usr/var/run/mysqld.sock");
+$conn = new mysqli("localhost", "root", "", "jj");
 if ($conn->connect_error) {
     die("Database connection failed: " . $conn->connect_error);
 }
