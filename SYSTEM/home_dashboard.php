@@ -1,7 +1,7 @@
 <?php
-// database.php - Database connection code
+
 $host = 'localhost';
-$db   = 'system';
+$db   = 'jj';
 $user = 'root';
 $pass = '';
 $charset = 'utf8mb4';
@@ -24,7 +24,6 @@ if (!isset($_SESSION['cart'])) {
     $_SESSION['cart'] = [];
 }
 
-// Handle add-to-cart request
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['product_id'])) {
     $productId = (int) $_POST['product_id'];
     $_SESSION['cart'][] = $productId;
@@ -35,7 +34,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['product_id'])) {
 <head>
   <meta charset="UTF-8">
   <title>Dashboard - Marketplace</title>
-  <link rel="stylesheet" href="dashboard1.css">
+  <link rel="stylesheet" href="home_dashboard.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
   <script>
     function scrollToSection(id) {
       document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
@@ -53,8 +54,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['product_id'])) {
 
   <header class="navbar">
     <div class="navbar-left">
-      <div class="logo">🛒 MarketDash</div>
-      <div class="profile">👤 Profile</div>
+      <div class="logo">🛒 IntegraTrade</div>
+      <div class="profile">Profile</div>
+      <i class='bx bxs-user'></i>
     </div>
 
     <form class="navbar-search" method="GET" action="#products" onsubmit="handleSearch(event)">
@@ -64,6 +66,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['product_id'])) {
 
     <nav class="navbar-right">
       <a href="#home" onclick="scrollToSection('home')">Home</a>
+    
+
       <a href="#products" onclick="scrollToSection('products')">Products</a>
       <a href="#cart" onclick="scrollToSection('cart')">Cart (<?= count($_SESSION['cart']) ?>)</a>
       <a href="#about" onclick="scrollToSection('about')">About</a>
@@ -72,25 +76,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['product_id'])) {
 
   <main>
   <section id="home">
-  <h1>Welcome to MarketDash!</h1>
+  <h1>Welcome to IntegraTrade!</h1>
   <p>Your one-stop marketplace for amazing products.</p>
-  <img src="online marketing.jpg" alt="Welcome Banner" class="welcome-img">
+  <img src="welcome.jpg" alt="Welcome Banner" class="welcome-img">
 </section>
 
 
     <section id="products">
       <h2>Featured Products</h2>
-      <img src=".jpg" alt="Welcome Banner" class="welcome-img">
-      <div class="product-grid">
+      <img src="shoes1.jpeg" alt="Welcome Banner" class="welcome-img">
+      <div class="product-cards">
+        <section class="featured-products">
+        
+  <h2>Featured Products</h2>
+  <div class="product-card">
+    <img src="shoes3.jpeg" alt="Product Image" class="product-img" />
+    <div class="product-overlay">
+      <h3>Nike Air Max Portal</h3>
+      <p>Step into the future with Nike Air Max Portal where style meets next-gen comfort. Bold design. Limitless energy.</p>
+      <button class="btn">View Details</button>
+    </div>
+  </div>
+</section>
+
         <?php
-        $stmt = $pdo->query("SELECT id, name, price FROM products LIMIT 6");
+        $stmt = $pdo->query("SELECT product_id, product_name, price FROM products LIMIT 6");
         while ($product = $stmt->fetch()):
         ?>
           <div class="product-card">
-            <h3><?= htmlspecialchars($product['name']) ?></h3>
+            <h3><?= htmlspecialchars($product['product_name']) ?></h3>
             <p>₱<?= number_format($product['price'], 2) ?></p>
             <form method="POST">
-              <input type="hidden" name="product_id" value="<?= $product['id'] ?>">
+              <input type="hidden" name="id" value="<?= $product['product_id'] ?>">
               <button class="btn" type="submit">Add to Cart</button>
             </form>
           </div>
@@ -106,7 +123,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['product_id'])) {
         <ul>
         <?php
           $cartIds = implode(',', array_map('intval', $_SESSION['cart']));
-          $stmt = $pdo->query("SELECT name, price FROM products WHERE id IN ($cartIds)");
+          $stmt = $pdo->query("SELECT product_name, price FROM products WHERE product_id IN ($cartIds)");
           while ($item = $stmt->fetch()):
         ?>
           <li><?= htmlspecialchars($item['name']) ?> - ₱<?= number_format($item['price'], 2) ?></li>

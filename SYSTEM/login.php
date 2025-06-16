@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-$conn = new mysqli("localhost", "root", "", "market");
+$conn = new mysqli("localhost", "root", "", "jj");
 
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
@@ -28,7 +28,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             if ($row['role'] === 'admin') {
                 header("Location: dashboard1.php");
             } else {
-                header("Location: admindash.php");
+                header("Location: home_dashboard.php");
             }
             exit();
         } else {
