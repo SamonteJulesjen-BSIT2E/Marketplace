@@ -90,7 +90,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['product_id'])) {
         
   <h2>Featured Products</h2>
   <div class="product-card">
-    <img src="shoes3.jpeg" alt="Product Image" class="product-img" />
+    <img src="uploads/<?php echo htmlspecialchars($row['image']); ?>" alt="<?php echo htmlspecialchars($row['image']); ?>"
+
     <div class="product-overlay">
       <h3>Nike Air Max Portal</h3>
       <p>Step into the future with Nike Air Max Portal where style meets next-gen comfort. Bold design. Limitless energy.</p>
