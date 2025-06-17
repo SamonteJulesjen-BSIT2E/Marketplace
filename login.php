@@ -21,7 +21,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         if ($result->num_rows > 0) {
             $row = $result->fetch_assoc();
-
+            
+            $_SESSION["uid"] = $row['user_id'];
             $_SESSION["email"] = $row['Email'];
             $_SESSION["role"] = $row['role'];
 

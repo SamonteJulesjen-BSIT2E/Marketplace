@@ -58,7 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
 
 <div class="sidebar">
-    <h2>2Eforlife</h2>
+    <h2>IntegraTrade</h2>
     <a href="?view=marketplace">Marketplace</a>
     <a href="?view=cart">My Cart</a>
     <a href="?view=add">Add Product</a>
